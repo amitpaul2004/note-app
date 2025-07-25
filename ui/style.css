@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background-color: #1e1e1e;
+  color: white;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #1e1e1e;
+  padding: 10px 0;
+  border-right: 1px solid #333;
+  height: 100%;
+}
+
+.sidebar-header {
+  padding: 0 16px 10px;
+}
+
+.hamburger {
+  font-size: 18px;
+  cursor: pointer;
+  color: #ccc;
+}
+
+.notebook-container {
+  padding: 0 10px;
+}
+
+.notebook-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: #ddd;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}
+
+.notebook-icon {
+  color: #d19efb; /* Purple notebook icon */
+  font-size: 18px;
+}
+
+.dropdown {
+  font-size: 12px;
+  color: #ccc;
+}
+
+.section {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  color: #ddd;
+}
+
+.section:hover {
+  background-color: #2a2a2a;
+}
+
+.section.selected {
+  background-color: #2d2d2d;
+}
+
+.quick-notes {
+  font-weight: bold;
+  gap: 10px;
+}
+
+.blue-bar {
+  width: 6px;
+  height: 20px;
+  background-color: #339cff;
+  border-radius: 3px;
+}
+
+.new-section {
+  color: #bbb;
+  font-weight: 400;
+  margin-top: 6px;
+}
+
+.plus {
+  color: #c69fff;
+  font-size: 16px;
+  margin-right: 8px;
+}
