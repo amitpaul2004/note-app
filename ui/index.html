@@ -6,6 +6,9 @@
   <title>OneNote UI Clone</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  
+    <link rel="stylesheet" href="styles.css">
+
   <style>
     body {
       background-color: #1e1e1e;
@@ -130,50 +133,294 @@
 #notebookArrow.rotate {
   transform: rotate(-180deg);
 }
+.topbar button {
+  text-decoration: none !important;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: white;
+  background-color: transparent;
+}
+
+
+.home-toolbar {
+  background-color: #1e1e1e;
+  color: white;
+  border-top: 1px solid #333;
+  padding: 8px 16px;
+  box-shadow: inset 0 -1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.toolbar-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Borderless tool buttons */
+.tool-btn {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+  font-size: 16px;
+}
+
+.tool-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Font family and size dropdowns with visible border */
+.font-select,
+.size-select {
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+/* Style buttons with outline */
+.style-btn {
+  border: 1px solid #888;
+  color: white;
+  background-color: #2a2a2a;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.style-btn:hover {
+  background-color: #444;
+}
+
+
+.font-tools select {
+  background-color: #2c2c2e;
+  color: #fff;
+  border: 1px solid #444;
+  width: auto;
+  min-width: 100px;
+  font-size: 14px;
+}
+
+.font-tools option {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+.font-select {
+  font-family: inherit;
+}
+
+.size-select {
+  width: 60px;
+  text-align: center;
+}
+
+.font-tools-horizontal {
+  background-color: #1e1e1e;
+  padding: 8px 12px;
+  border-radius: 6px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.font-tools-horizontal select {
+  background-color: #2c2c2e;
+  color: #fff;
+  border: 1px solid #444;
+  font-size: 13px;
+  min-width: 100px;
+  height: 30px;
+}
+
+.size-select {
+  width: 60px;
+  text-align: center;
+}
+
+.style-btn {
+  background-color: #2a2a2a;
+  color: white;
+  border: 1px solid #555;
+  padding: 4px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+.style-btn:hover {
+  background-color: #444;
+}
+
+/* Transparent toolbar buttons */
+#homeToolbar .style-btn {
+  background-color: transparent !important;
+  border: none !important;
+  color: rgb(255, 255, 255);
+  box-shadow: none;
+}
+
+/* Transparent dropdown */
+#homeToolbar .style-dropdown {
+  background-color: transparent;
+  border: none;
+  color: rgb(255, 255, 255);
+  box-shadow: none;
+  appearance: none;
+  padding-right: 1.5rem;
+}
+
+/* Optional: add a white chevron for dropdown */
+#homeToolbar .style-dropdown::after {
+  content: "▼";
+  color: rgb(252, 250, 250);
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+}
+
+#homeToolbar .style-btn {
+  background-color: transparent !important;
+  border: none !important;
+  color: white;
+}
+
+.tool-btn {
+  background: transparent;
+  border: none;
+  color: white;
+}
 
   </style>
 </head>
 <body>
-  <!-- Topbar -->
-  <div class="topbar">
-    <div class="d-flex align-items-center">
-      <span>File</span><span>Home</span><span>Insert</span><span>Draw</span><span>History</span><span>Review</span><span>View</span><span>Help</span>
-    </div>
-    <div class="d-flex align-items-center gap-2">
-      <button class="btn btn-sm btn-outline-light"><i class="bi bi-stickies"></i> Sticky Notes</button>
-      <button class="btn btn-sm btn-outline-light"><i class="bi bi-share"></i> Share</button>
-      <i class="bi bi-person-circle text-white fs-5 ms-2"></i>
+ <!-- Topbar -->
+<div class="topbar d-flex justify-content-between align-items-center px-3 py-2 bg-dark text-white">
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-light" onclick="toggleFileToolbar()">File</button>
+    <button class="btn btn-sm btn-outline-light" onclick="toggleHomeToolbar()">Home</button>
+    <button class="btn btn-sm btn-outline-light">Insert</button>
+    <button class="btn btn-sm btn-outline-light">Draw</button>
+    <button class="btn btn-sm btn-outline-light">History</button>
+    <button class="btn btn-sm btn-outline-light">Review</button>
+    <button class="btn btn-sm btn-outline-light">View</button>
+    <button class="btn btn-sm btn-outline-light">Help</button>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <button class="btn btn-sm btn-outline-light"><i class="bi bi-stickies"></i> Sticky Notes</button>
+    <button class="btn btn-sm btn-outline-light"><i class="bi bi-share"></i> Share</button>
+    <i class="bi bi-person-circle text-white fs-5 ms-2"></i>
+  </div>
+</div>
+
+
+  <!-- Home Toolbar -->
+  <div id="homeToolbar" class="home-toolbar d-none">
+    <div class="toolbar-content">
+      <div class="toolbar-group">
+        <button class="tool-btn" title="Paste"><i class="bi bi-clipboard"></i></button>
+        <button class="tool-btn" title="Erase"><i class="bi bi-eraser"></i></button>
+      </div>
+      <div class="toolbar-group font-tools-horizontal">
+        <select class="font-select form-select form-select-sm" title="Font Style">
+          <option selected>Calibri</option>
+          <option>Arial</option>
+          <option>Verdana</option>
+          <option>Times New Roman</option>
+          <option>Monospace</option>
+        </select>
+        <select class="size-select form-select form-select-sm" title="Font Size">
+          <option>10</option>
+          <option selected>12</option>
+          <option>14</option>
+          <option>16</option>
+          <option>18</option>
+          <option>20</option>
+          <option>24</option>
+        </select>
+        <button class="style-btn fw-bold" title="Bold">B</button>
+        <button class="style-btn fst-italic" title="Italic">I</button>
+        <button class="style-btn text-decoration-underline" title="Underline">U</button>
+        <button class="style-btn text-decoration-line-through" title="Strikethrough">ab</button>
+      </div>
+      <div class="toolbar-group">
+        
+        <button class="tool-btn" id="colorBtn" title="Text Color"><i class="bi bi-palette"></i></button>
+
+        <!-- Hidden color picker -->
+<input type="color" id="fontColorPicker" style="display:none;">
+        <button class="tool-btn" title="Bullet list"><i class="bi bi-list-ul"></i></button>
+        <button class="tool-btn" title="Numbered list"><i class="bi bi-list-ol"></i></button>
+        <!-- Alignment Buttons -->
+<button class="btn btn-sm style-btn" id="alignLeft" title="Align Left"><i class="bi bi-text-left"></i></button>
+<button class="btn btn-sm style-btn" id="alignCenter" title="Align Center"><i class="bi bi-text-center"></i></button>
+<button class="btn btn-sm style-btn" id="alignRight" title="Align Right"><i class="bi bi-text-right"></i></button>
+<button class="btn btn-sm style-btn" id="alignJustify" title="Justify"><i class="bi bi-justify"></i></button>
+
+        <div class="dropdown">
+          <!-- New Toolbar Buttons -->
+<button class="btn btn-sm style-btn" id="pasteBtn" title="Paste"><i class="bi bi-clipboard"></i></button>
+<button class="btn btn-sm style-btn" id="eraseBtn" title="Remove Formatting"><i class="bi bi-eraser"></i></button>
+
+<!-- Style Dropdown -->
+<select class="form-select form-select-sm style-dropdown" id="styleDropdown" title="Text Style">
+  <option value="P">--styles--</option>
+  <option value="H1">Heading 1</option>
+  <option value="H2">Heading 2</option>
+  <option value="H3">Heading 3</option>
+  <option value="PRE">Code</option>
+</select>
+
+        </div>
+      </div>
     </div>
   </div>
 
+
+
   <!-- Layout -->
   <div class="d-flex" style="height: calc(100vh - 40px);">
-    <!-- Sidebar -->
     <div id="sidebar" class="sidebar">
       <div class="px-3 mb-3 d-flex justify-content-between align-items-center">
-        <i class="bi bi-list text-white fs-5 notebook-toggle" onclick="toggleSidebar()"></i>
-        <i class="bi bi-caret-down-fill text-white fs-6 notebook-toggle" onclick="toggleNotebook()" title="Collapse Notebook"></i>
+        <i class="bi bi-list notebook-toggle" onclick="toggleSidebar()"></i>
+        <i class="bi bi-caret-down-fill notebook-toggle" onclick="toggleNotebookDropdown()"></i>
       </div>
-      <div class="px-3" id="notebookContainer">
+      <div id="notebookContainer">
         <div class="notebook-item mb-2" onclick="toggleNotebookDropdown()">
-  <i class="bi bi-journal-bookmark-fill"></i>
-  <span class="text-label">My Notebook</span>
-  <i class="bi bi-chevron-down ms-auto text-label" id="notebookArrow"></i>
-</div>
-<div id="sectionList" class="collapse show">
-  <div class="section-item">
-            <div class="left">
-              <div class="color-bar" style="background-color:#00aaff"></div>
-              <input class="edit-input" value="Quick Notes"/>
-            </div>
-            <i class="bi bi-trash" onclick="this.parentElement.remove()" title="Delete"></i>
-          </div>
+          <i class="bi bi-journal-bookmark-fill"></i><span>My Notebook</span>
+          <i id="notebookArrow" class="bi bi-chevron-down ms-auto"></i>
         </div>
+        <div id="sectionList" class="collapse show"></div>
       </div>
-      <div class="new-section" onclick="addSection()">
-        <i class="bi bi-plus-circle me-2"></i> <span class="text-label">New Section</span>
+      <div class="new-section" onclick="addSection()"><i class="bi bi-plus-circle"></i> New Section</div>
+    </div>
+    <div class="page-list" id="pageList">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-sm btn-add-page" onclick="addPage()">Add Page</button>
       </div>
     </div>
+    <div class="main-content">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div id="dateTimeDisplay" class="text-muted"></div>
+        <input class="search-bar" placeholder="Search..." />
+      </div>
+      <div id="editor" contenteditable="true" class="editor">Start typing your note here...</div>
+    </div>
+  </div>
 
     <!-- Page List -->
     <div class="page-list" id="pageList">
@@ -204,209 +451,213 @@
   </div>
 
   <script>
-  const sectionColors = ['#ff6f61', '#6b5b95', '#88b04b', '#f7cac9', '#92a8d1'];
-  let sectionCount = 1;
-  let sectionData = {};
-  let currentSectionId = null;
-  let currentPageElement = null;
-  let timestampInserted = false;
+const sectionColors = ['#ff6f61', '#6b5b95', '#88b04b', '#f7cac9', '#92a8d1'];
+let sectionCount = 1;
+let sectionData = {};
+let currentSectionId = null;
+let currentPageIndex = null;
+let timestampInserted = false;
 
-  // Add new section
-  function addSection() {
-    const sectionId = `section-${Date.now()}`;
-    const color = sectionColors[sectionCount % sectionColors.length];
-
-    const section = document.createElement('div');
-    section.className = 'section-item';
-    section.setAttribute('data-section-id', sectionId);
-    section.innerHTML = `
+// Add a new section
+function addSection() {
+  const sectionId = `section-${Date.now()}`;
+  const color = sectionColors[sectionCount % sectionColors.length];
+  const sectionHtml = `
+    <div class="section-item" data-section-id="${sectionId}">
       <div class="left" onclick="selectSection('${sectionId}', this)">
         <div class="color-bar" style="background-color:${color}"></div>
-        <input class="edit-input" value="Quick Notes ${sectionCount}"/>
+        <input class="edit-input" value="Quick Notes ${sectionCount}" />
       </div>
-      <i class="bi bi-trash" onclick="deleteSection(this)" title="Delete"></i>
-    `;
-    document.getElementById('sectionList').appendChild(section);
+      <i class="bi bi-trash" title="Delete" onclick="deleteSection(this)"></i>
+    </div>`;
+  document.getElementById('sectionList').insertAdjacentHTML('beforeend', sectionHtml);
 
-    // Create default page
-    sectionData[sectionId] = [{
-      title: "Untitled Page",
-      content: "",
-      timestamp: ""
-    }];
-
-    sectionCount++;
-    selectSection(sectionId, section.querySelector('.left'));
-  }
-
-  // Select section
-  function selectSection(sectionId, element) {
-    currentSectionId = sectionId;
-    currentPageElement = null;
-    timestampInserted = false;
-
-    // Highlight active section
-    document.querySelectorAll('.section-item').forEach(el => {
-      el.classList.remove('bg-secondary');
-    });
-    element.parentElement.classList.add('bg-secondary');
-
-    renderPageList();
-    if (sectionData[sectionId].length > 0) {
-      loadPageFromData(0);
-    } else {
-      document.getElementById('editor').innerHTML = '';
-      document.getElementById('dateTimeDisplay').innerHTML = '';
-    }
-  }
-
-  // Delete section
-  function deleteSection(icon) {
-    const section = icon.parentElement;
-    const sectionId = section.getAttribute('data-section-id');
-    const confirmDelete = confirm("🗑️ Are you sure you want to delete this section?");
-    
-    if (confirmDelete) {
-      if (currentSectionId === sectionId) {
-        document.getElementById('editor').innerHTML = '';
-        document.getElementById('dateTimeDisplay').innerHTML = '';
-        currentSectionId = null;
-        currentPageElement = null;
-      }
-
-      delete sectionData[sectionId];
-      section.remove();
-      document.getElementById('pageList').innerHTML = `
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <button class="btn btn-sm" style="border: 1px solid #6e5693; color: #c8a2ff;" onclick="addPage()">
-            <i class="bi bi-pencil-square me-1"></i> Add Page
-          </button>
-          <i class="bi bi-filter text-white-50 fs-5" style="cursor: pointer;"></i>
-        </div>
-      `;
-    }
-  }
-
-  // Render page list
-  function renderPageList() {
-    const container = document.getElementById('pageList');
-    const pages = sectionData[currentSectionId];
-
-    container.innerHTML = `
-      <div class="d-flex justify-content-between align-items-center mb-3">
-        <button class="btn btn-sm" style="border: 1px solid #6e5693; color: #c8a2ff;" onclick="addPage()">
-          <i class="bi bi-pencil-square me-1"></i> Add Page
-        </button>
-        <i class="bi bi-filter text-white-50 fs-5" style="cursor: pointer;"></i>
-      </div>
-    `;
-
-    pages.forEach((page, index) => {
-      const div = document.createElement('div');
-      div.className = 'page-item';
-      div.innerHTML = `${page.title}<i class="bi bi-x-lg delete-btn" onclick="deletePage(event, ${index})"></i>`;
-      div.onclick = () => loadPageFromData(index);
-      container.appendChild(div);
-    });
-  }
-
-  // Load page into editor
-  function loadPageFromData(index) {
-    currentPageElement = index;
-    const page = sectionData[currentSectionId][index];
-    document.getElementById('editor').innerHTML = page.content || 'Start typing your note here...';
-    document.getElementById('dateTimeDisplay').innerHTML = page.timestamp || getCurrentDateTime();
-    timestampInserted = !!page.timestamp;
-  }
-
-  // Add new page
-  function addPage() {
-    if (!currentSectionId) return;
-
-    sectionData[currentSectionId].push({
-      title: "Untitled Page",
-      content: "",
-      timestamp: ""
-    });
-
-    renderPageList();
-    loadPageFromData(sectionData[currentSectionId].length - 1);
-  }
-
-  // Delete page
-  function deletePage(event, index) {
-    event.stopPropagation();
-    sectionData[currentSectionId].splice(index, 1);
-    renderPageList();
-    document.getElementById('editor').innerHTML = '';
-    document.getElementById('dateTimeDisplay').innerHTML = '';
-    currentPageElement = null;
-    timestampInserted = false;
-  }
-
-  // Editor typing logic
-  document.getElementById('editor').addEventListener('input', function () {
-    if (!currentSectionId || currentPageElement === null) return;
-
-    const lines = this.innerText.trim().split('\n');
-    const headline = lines[0] || "Untitled Page";
-
-    sectionData[currentSectionId][currentPageElement].title = headline;
-
-    if (!timestampInserted && headline.length > 0) {
-      timestampInserted = true;
-      const time = getCurrentDateTime();
-      sectionData[currentSectionId][currentPageElement].timestamp = time;
-      this.innerHTML = `<div>${headline}</div>
-        <div style="margin-top: 4px; color: #aaa; border-top: 1px solid #555; padding-top: 6px;">
-        ${time}</div><br>`;
-      placeCaretAtEnd(this);
-    }
-
-    sectionData[currentSectionId][currentPageElement].content = this.innerHTML;
-    renderPageList();
-  });
-
-  // Get current date/time
-  function getCurrentDateTime() {
-    const now = new Date();
-    return now.toLocaleString();
-  }
-
-  // Caret position
-  function placeCaretAtEnd(el) {
-    el.focus();
-    if (typeof window.getSelection != "undefined"
-        && typeof document.createRange != "undefined") {
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
-    }
-  }
-
-  // Initialize with one section
-  window.onload = () => {
-    addSection();
-  };
-  function toggleSidebar() {
-  const sidebar = document.getElementById('sidebar');
-  sidebar.classList.toggle('collapsed');
+  sectionData[sectionId] = [{ title: 'Untitled Page', content: '', timestamp: '' }];
+  sectionCount++;
+  selectSection(sectionId, document.querySelector(`div[data-section-id="${sectionId}"] .left`));
 }
-function toggleNotebookDropdown() {
-  const sectionList = document.getElementById('sectionList');
-  const arrow = document.getElementById('notebookArrow');
 
-  if (sectionList.classList.contains('show')) {
-    sectionList.classList.remove('show');
-    arrow.classList.remove('rotate');
+// Select section and update UI
+function selectSection(sectionId, el) {
+  currentSectionId = sectionId;
+  currentPageIndex = null;
+  timestampInserted = false;
+  
+  document.querySelectorAll('.section-item').forEach(si => si.classList.remove('bg-secondary'));
+  el.parentElement.classList.add('bg-secondary');
+
+  renderPageList();
+  if (sectionData[sectionId]?.length > 0) {
+    loadPageFromData(0);
   } else {
-    sectionList.classList.add('show');
-    arrow.classList.add('rotate');
+    clearEditor();
   }
 }
+
+// Delete section
+function deleteSection(icon) {
+  const sectionEl = icon.closest('.section-item');
+  const sid = sectionEl.getAttribute('data-section-id');
+  if (confirm('🗑️ Delete this section and all its pages?')) {
+    delete sectionData[sid];
+    sectionEl.remove();
+    clearEditor();
+    currentSectionId = null;
+    renderPageList(); // this will show only the "add page" header
+  }
+}
+
+// Render page list
+function renderPageList() {
+  const pageList = document.getElementById('pageList');
+  const pages = sectionData[currentSectionId] || [];
+
+  pageList.innerHTML = `
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <button class="btn btn-sm" style="border:1px solid #6e5693; color:#c8a2ff;" onclick="addPage()">Add Page</button>
+    </div>`;
+  pages.forEach((p, idx) => {
+    const div = document.createElement('div');
+    div.className = 'page-item';
+    div.innerHTML = `${p.title} <i class="bi bi-x-lg delete-btn" onclick="deletePage(event, ${idx})"></i>`;
+    div.onclick = () => loadPageFromData(idx);
+    pageList.appendChild(div);
+  });
+}
+
+// Add a new page
+function addPage() {
+  if (!currentSectionId) return;
+  sectionData[currentSectionId].push({ title: 'Untitled Page', content: '', timestamp: '' });
+  renderPageList();
+  loadPageFromData(sectionData[currentSectionId].length - 1);
+}
+
+// Delete a page
+function deletePage(evt, index) {
+  evt.stopPropagation();
+  sectionData[currentSectionId]?.splice(index, 1);
+  renderPageList();
+  clearEditor();
+}
+
+// Load page into editor
+function loadPageFromData(index) {
+  currentPageIndex = index;
+  timestampInserted = false;
+
+  const page = sectionData[currentSectionId][index];
+  document.getElementById('editor').innerHTML = page.content || 'Start typing your note here…';
+  document.getElementById('dateTimeDisplay').innerText = page.timestamp || (page.timestamp = getCurrentDateTime());
+  timestampInserted = !!page.timestamp;
+}
+
+// Clear editor area
+function clearEditor() {
+  document.getElementById('editor').innerHTML = '';
+  document.getElementById('dateTimeDisplay').innerText = '';
+}
+
+// Handle editor typing and update page metadata
+document.getElementById('editor').addEventListener('input', function() {
+  if (currentSectionId === null || currentPageIndex === null) return;
+
+  const textLines = this.innerText.split('\n');
+  const title = textLines[0] || 'Untitled Page';
+  const page = sectionData[currentSectionId][currentPageIndex];
+
+  page.title = title;
+  page.content = this.innerHTML;
+
+  if (!timestampInserted) {
+    timestampInserted = true;
+    page.timestamp = getCurrentDateTime();
+    document.getElementById('dateTimeDisplay').innerText = page.timestamp;
+  }
+
+  renderPageList();
+});
+
+// Get current date/time string
+function getCurrentDateTime() {
+  return new Date().toLocaleString();
+}
+
+/* Sidebar toggle functions */
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+function toggleNotebookDropdown() {
+  const list = document.getElementById('sectionList');
+  const arrow = document.getElementById('notebookArrow');
+  list.classList.toggle('show');
+  arrow.classList.toggle('rotate');
+}
+
+// Toggling Home toolbar
+function toggleHomeToolbar() {
+  document.getElementById('homeToolbar').classList.toggle('d-none');
+}
+
+// Initialize once DOM content is ready
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelector('.font-select').onchange = function() {
+    document.execCommand('fontName', false, this.value);
+  };
+  document.querySelector('.size-select').onchange = function() {
+    const sizeMap = { "10": "1", "12": "2", "14": "3", "16": "4", "18": "5", "20": "6", "24": "7" };
+    document.execCommand('fontSize', false, sizeMap[this.value]);
+  };
+  document.querySelector('.style-btn.fw-bold').onclick = () => document.execCommand('bold');
+  document.querySelector('.style-btn.fst-italic').onclick = () => document.execCommand('italic');
+  document.querySelector('.style-btn.text-decoration-underline').onclick = () => document.execCommand('underline');
+  document.querySelector('.style-btn.text-decoration-line-through').onclick = () => document.execCommand('strikeThrough');
+
+  addSection(); // Start with one section
+});
+
+
+// 🟢 Paste (triggers clipboard paste if permitted)
+document.getElementById('pasteBtn').onclick = async () => {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.execCommand("insertText", false, text);
+  } catch (err) {
+    alert("Clipboard access denied. Use Ctrl+V.");
+  }
+};
+
+// 🟢 Eraser (removes formatting)
+document.getElementById('eraseBtn').onclick = () => {
+  document.execCommand('removeFormat');
+};
+
+// 🟢 Style dropdown (heading/paragraph/pre)
+document.getElementById('styleDropdown').onchange = function () {
+  const tag = this.value;
+  document.execCommand('formatBlock', false, tag);
+};
+
+
+// Text alignment functionality
+document.getElementById('alignLeft').onclick = () => document.execCommand('justifyLeft');
+document.getElementById('alignCenter').onclick = () => document.execCommand('justifyCenter');
+document.getElementById('alignRight').onclick = () => document.execCommand('justifyRight');
+document.getElementById('alignJustify').onclick = () => document.execCommand('justifyFull');
+
+
+const colorBtn = document.getElementById('colorBtn');
+const colorPicker = document.getElementById('fontColorPicker');
+
+colorBtn.addEventListener('click', () => {
+  colorPicker.click(); // trigger the hidden input
+});
+
+colorPicker.addEventListener('input', () => {
+  document.execCommand('foreColor', false, colorPicker.value);
+});
+
 
 
 </script>
