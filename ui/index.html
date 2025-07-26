@@ -307,6 +307,91 @@
   color: white !important;
 }
 
+
+
+.file-toolbar {
+  position: fixed;
+  top: 40px; /* below topbar */
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 40px);
+  background-color: #121212;
+  border-right: 1px solid #444;
+  padding: 20px 10px;
+  z-index: 999;
+  transition: transform 0.3s ease;
+}
+
+.file-toolbar .back-btn {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.file-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+
+.file-menu li {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+}
+
+.file-menu li:hover {
+  background-color: #2a2a2a;
+}
+
+.file-toolbar .divider {
+  margin: 12px 0;
+  border-color: #555;
+}
+
+.file-bottom {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+}
+
+.draw-toolbar {
+  background-color: #1e1e1e;
+  padding: 8px 12px;
+  border-top: 1px solid #333;
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.draw-toolbar-content {
+  display: flex;
+  gap: 12px;
+}
+
+.draw-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 18px;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+.draw-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+}
+
+
   </style>
 </head>
 <body>
@@ -316,11 +401,8 @@
     <button class="btn btn-sm btn-outline-light" onclick="toggleFileToolbar()">File</button>
     <button class="btn btn-sm btn-outline-light" onclick="toggleHomeToolbar()">Home</button>
     <button class="btn btn-sm btn-outline-light">Insert</button>
-    <button class="btn btn-sm btn-outline-light">Draw</button>
-    <button class="btn btn-sm btn-outline-light">History</button>
-    <button class="btn btn-sm btn-outline-light">Review</button>
-    <button class="btn btn-sm btn-outline-light">View</button>
-    <button class="btn btn-sm btn-outline-light">Help</button>
+    <button class="btn btn-sm btn-outline-light" onclick="toggleDrawToolbar()">Draw</button>
+    
   </div>
 
   <div class="d-flex align-items-center gap-2">
@@ -328,6 +410,27 @@
     <button class="btn btn-sm btn-outline-light"><i class="bi bi-share"></i> Share</button>
     <i class="bi bi-person-circle text-white fs-5 ms-2"></i>
   </div>
+</div>
+
+<!-- File Toolbar Panel -->
+<div id="fileToolbar" class="file-toolbar d-none">
+  <button class="back-btn" onclick="toggleFileToolbar()"><i class="bi bi-arrow-left"></i></button>
+  <ul class="file-menu">
+    <li><i class="bi bi-house"></i> Info</li>
+    <li><i class="bi bi-journal-plus"></i> New</li>
+    <li><i class="bi bi-folder2-open"></i> Open</li>
+    <hr class="divider" />
+    <li>Save a Copy</li>
+    <li>Print</li>
+    <li>Share</li>
+    <li>Export</li>
+    <li>Send</li>
+    <div class="file-bottom">
+      <hr class="divider" />
+      <li>Account</li>
+      <li>Options</li>
+    </div>
+  </ul>
 </div>
 
 
@@ -393,6 +496,32 @@
     </div>
   </div>
 
+<!-- Draw Toolbar -->
+<div id="drawToolbar" class="draw-toolbar d-none">
+  <div class="draw-toolbar-content">
+    <button class="draw-btn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+    <button class="draw-btn" title="Select"><i class="bi bi-cursor"></i></button>
+    <button class="draw-btn" title="Lasso Select"><i class="bi bi-circle"></i></button>
+
+    <!-- Pens -->
+    <button class="draw-btn" title="Purple Pen"><i class="bi bi-pencil-fill" style="color:purple"></i></button>
+    <button class="draw-btn" title="Red Pen"><i class="bi bi-pencil-fill" style="color:red"></i></button>
+    <button class="draw-btn" title="Blue Pen"><i class="bi bi-pencil-fill" style="color:skyblue"></i></button>
+    <button class="draw-btn" title="Yellow Highlighter"><i class="bi bi-highlighter" style="color:yellow"></i></button>
+    <button class="draw-btn" title="Fountain Pen"><i class="bi bi-pen" style="color:deepskyblue"></i></button>
+    <button class="draw-btn" title="Green Pen"><i class="bi bi-pencil-fill" style="color:lightgreen"></i></button>
+
+    <button class="draw-btn" title="Add Pen"><i class="bi bi-plus-lg text-success"></i></button>
+    <button class="draw-btn" title="Pan Tool"><i class="bi bi-hand-index"></i></button>
+    <button class="draw-btn" title="Eraser"><i class="bi bi-eraser"></i></button>
+    <button class="draw-btn" title="Stroke Width"><i class="bi bi-arrow-down-up"></i></button>
+    <button class="draw-btn" title="Format Background"><i class="bi bi-table"></i></button>
+    <button class="draw-btn" title="Shapes"><i class="bi bi-circle-square"></i></button>
+    <button class="draw-btn" title="Math"><i class="bi bi-pi"></i></button>
+    <button class="draw-btn" title="Full Page View"><i class="bi bi-layout-fullscreen"></i></button>
+    <button class="draw-btn" title="Help"><i class="bi bi-question-circle"></i></button>
+  </div>
+</div>
 
 
   <!-- Layout -->
@@ -661,6 +790,29 @@ colorPicker.addEventListener('input', () => {
   document.execCommand('foreColor', false, colorPicker.value);
 });
 
+function toggleFileToolbar() {
+  const fileBar = document.getElementById('fileToolbar');
+  const homeBar = document.getElementById('homeToolbar');
+  const insertBar = document.getElementById('insertToolbar');
+
+  fileBar.classList.toggle('d-none');
+
+  // Hide other toolbars
+  if (!homeBar.classList.contains('d-none')) homeBar.classList.add('d-none');
+  if (!insertBar.classList.contains('d-none')) insertBar.classList.add('d-none');
+}
+
+function toggleDrawToolbar() {
+  const drawBar = document.getElementById('drawToolbar');
+  const homeBar = document.getElementById('homeToolbar');
+  const insertBar = document.getElementById('insertToolbar');
+  const fileBar = document.getElementById('fileToolbar');
+
+  drawBar.classList.toggle('d-none');
+  if (!homeBar.classList.contains('d-none')) homeBar.classList.add('d-none');
+  if (!insertBar.classList.contains('d-none')) insertBar.classList.add('d-none');
+  if (fileBar && !fileBar.classList.contains('d-none')) fileBar.classList.add('d-none');
+}
 
 
 </script>
