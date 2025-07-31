@@ -32,8 +32,10 @@ This is a OneNote-inspired web application UI built using HTML, CSS (Bootstrap),
 
 ---
 
-## 📂 Project Structure
 
-```bash
-📁 project-root/
-├── index.html      # Main app UI and logic (self-contained)
+## 🚀 Getting Started
+
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/amitpaul2004/note-app.git
+
