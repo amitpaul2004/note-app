@@ -1,815 +1,926 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OneNote UI Clone</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
     />
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
-      rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+        rel="stylesheet"
     />
     <style>
-      :root {
-        --dark-bg: #1e1e1e;
-        --secondary-bg: #2d2d30;
-        --panel-bg: #121212;
-        --border-color: #333;
-        --text-color: #fff;
-        --highlight-color: #c8a2ff;
-        --subtle-color: #6e5693;
-        --sidebar-width: 250px;
-        --sidebar-collapsed-width: 60px;
-      }
+        :root {
+            --dark-bg: #1e1e1e;
+            --secondary-bg: #2d2d30;
+            --panel-bg: #121212;
+            --border-color: #333;
+            --text-color: #fff;
+            --highlight-color: #c8a2ff;
+            --subtle-color: #6e5693;
+            --sidebar-width: 250px;
+            --sidebar-collapsed-width: 60px;
+            --transition-duration: 0.2s;
+            --transition-easing: ease-in-out;
+        }
 
-      body {
-        background-color: var(--dark-bg);
-        color: var(--text-color);
-        height: 100vh;
-        margin: 0;
-        font-family: 'Segoe UI', sans-serif;
-        overflow: hidden;
-      }
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            overflow: hidden;
+        }
 
-      /* --- Topbar & Toolbar Styling --- */
-      .topbar {
-        height: 40px;
-        background-color: var(--dark-bg);
-        padding: 0 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid var(--border-color);
-      }
+        /* --- Scrollbar Styling --- */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background-color: var(--secondary-bg);
+        }
 
-      .topbar-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-color);
-        padding: 6px 12px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        transition: background-color 0.2s ease;
-      }
+        ::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 4px;
+        }
 
-      .topbar-btn:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #777;
+        }
 
-      .topbar-btn.active {
-        background-color: var(--subtle-color);
-        color: var(--highlight-color);
-      }
+        /* --- Topbar & Toolbar Styling --- */
+        .topbar {
+            height: 40px;
+            background-color: var(--dark-bg);
+            padding: 0 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+        }
 
-      .toolbar {
-        background-color: var(--dark-bg);
-        border-top: 1px solid var(--border-color);
-        padding: 8px 16px;
-        box-shadow: inset 0 -1px 2px rgba(255, 255, 255, 0.05);
-        transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-      }
+        .topbar-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            transition: background-color var(--transition-duration) var(--transition-easing),
+                        color var(--transition-duration) var(--transition-easing);
+        }
 
-      .toolbar.hidden {
-        max-height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        overflow: hidden;
-        border-top-width: 0;
-      }
+        .topbar-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
 
-      .toolbar-group {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-      }
+        .topbar-btn.active {
+            background-color: var(--subtle-color);
+            color: var(--highlight-color);
+        }
 
-      .tool-btn,
-      .style-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-color);
-        padding: 6px 10px;
-        border-radius: 6px;
-        transition: background 0.2s ease;
-        font-size: 16px;
-      }
+        .toolbar {
+            background-color: var(--dark-bg);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 16px;
+            box-shadow: inset 0 -1px 2px rgba(255, 255, 255, 0.05);
+            transition: max-height var(--transition-duration) var(--transition-easing),
+                        padding var(--transition-duration) var(--transition-easing),
+                        border-top-width var(--transition-duration) var(--transition-easing);
+            overflow: hidden;
+        }
 
-      .tool-btn:hover,
-      .style-btn:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-      }
+        .toolbar.hidden {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            border-top-width: 0;
+        }
 
-      .font-select,
-      .size-select {
-        background-color: #2a2a2a;
-        color: var(--text-color);
-        border: 1px solid #555;
-        border-radius: 4px;
-        padding: 4px 8px;
-        width: auto;
-        min-width: 100px;
-        font-size: 14px;
-      }
+        .toolbar-group {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
 
-      .size-select {
-        width: 60px;
-        text-align: center;
-      }
+        .tool-btn,
+        .style-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-color);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: background var(--transition-duration) var(--transition-easing),
+                        transform 0.1s ease-in-out;
+        }
 
-      /* --- File Menu Panel --- */
-      .file-toolbar {
-        position: fixed;
-        top: 40px; /* below topbar */
-        left: 0;
-        width: var(--sidebar-width);
-        height: calc(100vh - 40px);
-        background-color: var(--panel-bg);
-        border-right: 1px solid var(--border-color);
-        padding: 20px 10px;
-        z-index: 1000;
-        transition: transform 0.3s ease;
-      }
+        .tool-btn:hover,
+        .style-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: scale(1.05);
+        }
 
-      .file-toolbar.hidden {
-        transform: translateX(-100%);
-      }
+        .tool-btn:active,
+        .style-btn:active {
+            transform: scale(0.95);
+        }
 
-      .file-menu {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-      }
+        .font-select,
+        .size-select {
+            background-color: #2a2a2a;
+            color: var(--text-color);
+            border: 1px solid #555;
+            border-radius: 4px;
+            padding: 4px 8px;
+            width: auto;
+            min-width: 100px;
+            font-size: 14px;
+            transition: border-color var(--transition-duration) var(--transition-easing);
+        }
 
-      .file-menu li {
-        padding: 10px 12px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border-radius: 4px;
-        transition: background-color 0.2s ease;
-      }
+        .font-select:focus,
+        .size-select:focus {
+            border-color: var(--highlight-color);
+            outline: none;
+        }
 
-      .file-menu li:hover {
-        background-color: #2a2a2a;
-      }
+        .size-select {
+            width: 60px;
+            text-align: center;
+        }
 
-      .file-toolbar .back-btn {
-        color: var(--text-color);
-        font-size: 20px;
-        margin-bottom: 20px;
-        background: none;
-        border: none;
-      }
+        /* --- File Menu Panel --- */
+        .file-toolbar {
+            position: fixed;
+            top: 40px; /* below topbar */
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - 40px);
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 10px;
+            z-index: 1000;
+            transform: translateX(-100%);
+            transition: transform var(--transition-duration) var(--transition-easing),
+                        box-shadow var(--transition-duration) var(--transition-easing);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
 
-      /* --- Main Layout & Sidebar --- */
-      .main-layout {
-        display: flex;
-        height: calc(100vh - 40px);
-      }
+        .file-toolbar.show {
+            transform: translateX(0);
+        }
 
-      .sidebar {
-        width: var(--sidebar-width);
-        background-color: var(--dark-bg);
-        padding-top: 10px;
-        transition: width 0.3s;
-      }
+        .file-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-      .sidebar.collapsed {
-        width: var(--sidebar-collapsed-width);
-      }
+        .file-menu li {
+            padding: 10px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 4px;
+            transition: background-color var(--transition-duration) var(--transition-easing);
+        }
 
-      .sidebar.collapsed .text-label {
-        display: none;
-      }
+        .file-menu li:hover {
+            background-color: #2a2a2a;
+        }
 
-      .notebook-item {
-        padding: 8px 12px;
-        font-weight: 500;
-        color: var(--text-color);
-        border-radius: 6px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-      }
+        .file-toolbar .back-btn {
+            color: var(--text-color);
+            font-size: 20px;
+            margin-bottom: 20px;
+            background: none;
+            border: none;
+            transition: color var(--transition-duration) var(--transition-easing);
+        }
 
-      .notebook-item i {
-        margin-right: 10px;
-        color: #ffb347;
-      }
+        .file-toolbar .back-btn:hover {
+            color: var(--highlight-color);
+        }
 
-      #notebookArrow {
-        transition: transform 0.3s ease;
-      }
+        /* --- Main Layout & Sidebar --- */
+        .main-layout {
+            display: flex;
+            height: calc(100vh - 40px);
+        }
 
-      #notebookArrow.rotate {
-        transform: rotate(-180deg);
-      }
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--dark-bg);
+            padding-top: 10px;
+            transition: width var(--transition-duration) var(--transition-easing),
+                        box-shadow var(--transition-duration) var(--transition-easing);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
 
-      .section-item {
-        display: flex;
-        align-items: center;
-        padding: 8px 12px;
-        font-weight: 500;
-        color: var(--text-color);
-        border-radius: 6px;
-        margin: 6px 12px;
-        justify-content: space-between;
-        background-color: var(--secondary-bg);
-        cursor: pointer;
-      }
+        .sidebar.collapsed {
+            width: var(--sidebar-collapsed-width);
+        }
 
-      .section-item:hover {
-        background-color: #3c3c3f;
-      }
+        .sidebar.collapsed .text-label {
+            display: none;
+        }
 
-      .section-item.active {
-        background-color: var(--subtle-color);
-      }
+        .notebook-item {
+            padding: 8px 12px;
+            font-weight: 500;
+            color: var(--text-color);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color var(--transition-duration) var(--transition-easing);
+        }
 
-      .section-item .left {
-        display: flex;
-        align-items: center;
-        flex-grow: 1;
-      }
+        .notebook-item:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
 
-      .color-bar {
-        width: 5px;
-        height: 20px;
-        margin-right: 10px;
-        border-radius: 4px;
-      }
+        .notebook-item i {
+            margin-right: 10px;
+            color: #ffb347;
+        }
 
-      .new-section {
-        padding-left: 34px;
-        margin: 12px 0;
-        color: #b3b3b3;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        transition: color 0.2s ease;
-      }
+        #notebookArrow {
+            transition: transform var(--transition-duration) var(--transition-easing);
+        }
 
-      .new-section:hover {
-        color: var(--text-color);
-      }
+        #notebookArrow.rotate {
+            transform: rotate(-180deg);
+        }
 
-      .page-list {
-        width: 260px;
-        background-color: var(--secondary-bg);
-        padding: 12px;
-      }
+        .section-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            font-weight: 500;
+            color: var(--text-color);
+            border-radius: 6px;
+            margin: 6px 12px;
+            justify-content: space-between;
+            background-color: var(--secondary-bg);
+            cursor: pointer;
+            transition: background-color var(--transition-duration) var(--transition-easing),
+                        box-shadow 0.1s ease-in-out;
+        }
 
-      .page-item {
-        position: relative;
-        background-color: #3c3c3f;
-        padding: 10px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        margin-bottom: 10px;
-        transition: background-color 0.2s ease;
-      }
+        .section-item:hover {
+            background-color: #3c3c3f;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
-      .page-item:hover {
-        background-color: #4c4c4f;
-      }
+        .section-item.active {
+            background-color: var(--subtle-color);
+            box-shadow: 0 2px 6px rgba(var(--highlight-color-rgb), 0.3);
+        }
 
-      .page-item.active {
-        outline: 2px solid var(--highlight-color);
-        background-color: #4c4c4f;
-      }
+        .section-item .left {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
 
-      .delete-btn {
-        display: none;
-        position: absolute;
-        top: 4px;
-        right: 4px;
-        color: #bbb;
-        cursor: pointer;
-      }
+        .color-bar {
+            width: 5px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+        }
 
-      .page-item:hover .delete-btn {
-        display: block;
-      }
+        .new-section {
+            padding-left: 34px;
+            margin: 12px 0;
+            color: #b3b3b3;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color var(--transition-duration) var(--transition-easing);
+        }
 
-      .main-content {
-        flex-grow: 1;
-        background-color: var(--dark-bg);
-        padding: 20px;
-        color: #ccc;
-      }
+        .new-section:hover {
+            color: var(--text-color);
+        }
 
-      .search-bar {
-        background-color: #333;
-        border: none;
-        color: white;
-        padding: 4px 8px;
-        border-radius: 6px;
-        width: 220px;
-      }
+        .page-list {
+            width: 260px;
+            background-color: var(--secondary-bg);
+            padding: 12px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
 
-      .editor {
-        min-height: 400px;
-        background-color: var(--secondary-bg);
-        border: none;
-        border-radius: 6px;
-        padding: 20px;
-        color: var(--text-color);
-        outline: none;
-        overflow-y: auto;
-      }
+        .page-item {
+            position: relative;
+            background-color: #3c3c3f;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color var(--transition-duration) var(--transition-easing),
+                        box-shadow 0.1s ease-in-out,
+                        outline-offset var(--transition-duration) var(--transition-easing),
+                        outline-width var(--transition-duration) var(--transition-easing);
+        }
+
+        .page-item:hover {
+            background-color: #4c4c4f;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-item.active {
+            outline: 2px solid var(--highlight-color);
+            outline-offset: -2px;
+            background-color: #4c4c4f;
+            box-shadow: 0 2px 6px rgba(var(--highlight-color-rgb), 0.3);
+        }
+
+        .delete-btn {
+            display: none;
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            color: #bbb;
+            cursor: pointer;
+            transition: color var(--transition-duration) var(--transition-easing);
+        }
+
+        .page-item:hover .delete-btn {
+            display: block;
+        }
+
+        .delete-btn:hover {
+            color: #eee;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            background-color: var(--dark-bg);
+            padding: 20px;
+            color: #ccc;
+            overflow-y: auto;
+        }
+
+        .search-bar {
+            background-color: #333;
+            border: none;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            width: 220px;
+            transition: background-color var(--transition-duration) var(--transition-easing),
+                        color var(--transition-duration) var(--transition-easing),
+                        box-shadow var(--transition-duration) var(--transition-easing);
+        }
+
+        .search-bar:focus {
+            background-color: #444;
+            box-shadow: 0 0 4px rgba(var(--highlight-color-rgb), 0.5);
+            outline: none;
+        }
+
+        .editor {
+            min-height: 400px;
+            background-color: var(--secondary-bg);
+            border: none;
+            border-radius: 6px;
+            padding: 20px;
+            color: var(--text-color);
+            outline: none;
+            overflow-y: auto;
+        }
     </style>
-  </head>
+</head>
 
-  <body>
+<body>
     <div class="topbar">
-      <div class="d-flex align-items-center gap-2">
-        <button class="topbar-btn" id="fileBtn" onclick="toggleToolbar('file')">
-          File
-        </button>
-        <button class="topbar-btn" id="homeBtn" onclick="toggleToolbar('home')">
-          Home
-        </button>
-        <button
-          class="topbar-btn"
-          id="insertBtn"
-          onclick="toggleToolbar('insert')"
-        >
-          Insert
-        </button>
-        <button class="topbar-btn" id="drawBtn" onclick="toggleToolbar('draw')">
-          Draw
-        </button>
-      </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="topbar-btn" id="fileBtn" onclick="toggleToolbar('file')">
+                File
+            </button>
+            <button class="topbar-btn" id="homeBtn" onclick="toggleToolbar('home')">
+                Home
+            </button>
+            <button class="topbar-btn" id="insertBtn" onclick="toggleToolbar('insert')">
+                Insert
+            </button>
+            <button class="topbar-btn" id="drawBtn" onclick="toggleToolbar('draw')">
+                Draw
+            </button>
+        </div>
 
-      <div class="d-flex align-items-center gap-2">
-        <button class="topbar-btn">
-          <i class="bi bi-stickies"></i> Sticky Notes
-        </button>
-        <button class="topbar-btn"><i class="bi bi-share"></i> Share</button>
-        <i class="bi bi-person-circle text-white fs-5 ms-2"></i>
-      </div>
+        <div class="d-flex align-items-center gap-2">
+            <button class="topbar-btn">
+                <i class="bi bi-stickies"></i> Sticky Notes
+            </button>
+            <button class="topbar-btn"><i class="bi bi-share"></i> Share</button>
+            <i class="bi bi-person-circle text-white fs-5 ms-2"></i>
+        </div>
     </div>
 
     <div id="toolbar-container">
-      <div id="fileToolbar" class="file-toolbar hidden">
-        <button class="back-btn" onclick="toggleToolbar('file')">
-          <i class="bi bi-arrow-left"></i>
-        </button>
-        <ul class="file-menu">
-          <li onclick="alert('Info functionality coming soon!')">
-            <i class="bi bi-house"></i> Info
-          </li>
-          <li onclick="alert('New functionality coming soon!')">
-            <i class="bi bi-journal-plus"></i> New
-          </li>
-          <li onclick="alert('Open functionality coming soon!')">
-            <i class="bi bi-folder2-open"></i> Open
-          </li>
-          <hr class="divider" />
-          <li onclick="alert('Save functionality coming soon!')">Save a Copy</li>
-          <li onclick="alert('Print functionality coming soon!')">Print</li>
-          <li onclick="alert('Share functionality coming soon!')">Share</li>
-          <li onclick="alert('Export functionality coming soon!')">Export</li>
-          <li onclick="alert('Send functionality coming soon!')">Send</li>
-          <div class="file-bottom">
-            <hr class="divider" />
-            <li onclick="alert('Account functionality coming soon!')">
-              Account
-            </li>
-            <li onclick="alert('Options functionality coming soon!')">
-              Options
-            </li>
-          </div>
-        </ul>
-      </div>
-
-      <div id="homeToolbar" class="toolbar hidden">
-        <div class="toolbar-content">
-          <div class="toolbar-group">
-            <button class="tool-btn" title="Paste" onclick="execCmd('paste')">
-              <i class="bi bi-clipboard"></i>
+        <div id="fileToolbar" class="file-toolbar hidden">
+            <button class="back-btn" onclick="toggleToolbar('file')">
+                <i class="bi bi-arrow-left"></i>
             </button>
-            <button
-              class="tool-btn"
-              title="Erase"
-              onclick="execCmd('removeFormat')"
-            >
-              <i class="bi bi-eraser"></i>
-            </button>
-          </div>
-          <div class="toolbar-group">
-            <select
-              class="font-select form-select form-select-sm"
-              onchange="execCmd('fontName', this.value)"
-              title="Font Style"
-            >
-              <option selected>Calibri</option>
-              <option>Arial</option>
-              <option>Verdana</option>
-              <option>Times New Roman</option>
-              <option>Monospace</option>
-            </select>
-            <select
-              class="size-select form-select form-select-sm"
-              onchange="execCmd('fontSize', this.value)"
-              title="Font Size"
-            >
-              <option value="1">10</option>
-              <option value="2" selected>12</option>
-              <option value="3">14</option>
-              <option value="4">16</option>
-              <option value="5">18</option>
-              <option value="6">20</option>
-              <option value="7">24</option>
-            </select>
-            <button
-              class="style-btn fw-bold"
-              title="Bold"
-              onclick="execCmd('bold')"
-            >
-              B
-            </button>
-            <button
-              class="style-btn fst-italic"
-              title="Italic"
-              onclick="execCmd('italic')"
-            >
-              I
-            </button>
-            <button
-              class="style-btn text-decoration-underline"
-              title="Underline"
-              onclick="execCmd('underline')"
-            >
-              U
-            </button>
-            <button
-              class="style-btn text-decoration-line-through"
-              title="Strikethrough"
-              onclick="execCmd('strikeThrough')"
-            >
-              ab
-            </button>
-            <button
-              class="tool-btn"
-              id="colorBtn"
-              title="Text Color"
-              onclick="document.getElementById('fontColorPicker').click()"
-            >
-              <i class="bi bi-palette"></i>
-            </button>
-            <input type="color" id="fontColorPicker" style="display: none" />
-          </div>
-          <div class="toolbar-group">
-            <button
-              class="tool-btn"
-              title="Bullet list"
-              onclick="execCmd('insertUnorderedList')"
-            >
-              <i class="bi bi-list-ul"></i>
-            </button>
-            <button
-              class="tool-btn"
-              title="Numbered list"
-              onclick="execCmd('insertOrderedList')"
-            >
-              <i class="bi bi-list-ol"></i>
-            </button>
-            <button
-              class="tool-btn"
-              title="Align Left"
-              onclick="execCmd('justifyLeft')"
-            >
-              <i class="bi bi-text-left"></i>
-            </button>
-            <button
-              class="tool-btn"
-              title="Align Center"
-              onclick="execCmd('justifyCenter')"
-            >
-              <i class="bi bi-text-center"></i>
-            </button>
-            <button
-              class="tool-btn"
-              title="Align Right"
-              onclick="execCmd('justifyRight')"
-            >
-              <i class="bi bi-text-right"></i>
-            </button>
-            <button
-              class="tool-btn"
-              title="Justify"
-              onclick="execCmd('justifyFull')"
-            >
-              <i class="bi bi-justify"></i>
-            </button>
-          </div>
+            <ul class="file-menu">
+                <li onclick="alert('Info functionality coming soon!')">
+                    <i class="bi bi-house"></i> Info
+                </li>
+                <li onclick="alert('New functionality coming soon!')">
+                    <i class="bi bi-journal-plus"></i> New
+                </li>
+                <li onclick="alert('Open functionality coming soon!')">
+                    <i class="bi bi-folder2-open"></i> Open
+                </li>
+                <hr class="divider" />
+                <li onclick="alert('Save functionality coming soon!')">Save a Copy</li>
+                <li onclick="alert('Print functionality coming soon!')">Print</li>
+                <li onclick="alert('Share functionality coming soon!')">Share</li>
+                <li onclick="alert('Export functionality coming soon!')">Export</li>
+                <li onclick="alert('Send functionality coming soon!')">Send</li>
+                <div class="file-bottom">
+                    <hr class="divider" />
+                    <li onclick="alert('Account functionality coming soon!')">
+                        Account
+                    </li>
+                    <li onclick="alert('Options functionality coming soon!')">
+                        Options
+                    </li>
+                </div>
+            </ul>
         </div>
-      </div>
 
-      <div id="insertToolbar" class="toolbar hidden">
-        <div class="toolbar-group">
-          <button class="tool-btn" onclick="alert('Table Inserted!')">
-            <i class="bi bi-grid-3x3"></i> Table
-          </button>
-          <button class="tool-btn" onclick="alert('Image Inserted!')">
-            <i class="bi bi-image"></i> Image
-          </button>
-          <button class="tool-btn" onclick="alert('File Attached!')">
-            <i class="bi bi-file-earmark-text"></i> File
-          </button>
-          <button class="tool-btn" onclick="alert('Link Inserted!')">
-            <i class="bi bi-link-45deg"></i> Link
-          </button>
+        <div id="homeToolbar" class="toolbar hidden">
+            <div class="toolbar-content">
+                <div class="toolbar-group">
+                    <button class="tool-btn" title="Paste" onclick="execCmd('paste')">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Erase"
+                        onclick="execCmd('removeFormat')"
+                    >
+                        <i class="bi bi-eraser"></i>
+                    </button>
+                </div>
+                <div class="toolbar-group">
+                    <select
+                        class="font-select form-select form-select-sm"
+                        onchange="execCmd('fontName', this.value)"
+                        title="Font Style"
+                    >
+                        <option selected>Calibri</option>
+                        <option>Arial</option>
+                        <option>Verdana</option>
+                        <option>Times New Roman</option>
+                        <option>Monospace</option>
+                    </select>
+                    <select
+                        class="size-select form-select form-select-sm"
+                        onchange="execCmd('fontSize', this.value)"
+                        title="Font Size"
+                    >
+                        <option value="1">10</option>
+                        <option value="2" selected>12</option>
+                        <option value="3">14</option>
+                        <option value="4">16</option>
+                        <option value="5">18</option>
+                        <option value="6">20</option>
+                        <option value="7">24</option>
+                    </select>
+                    <button
+                        class="style-btn fw-bold"
+                        title="Bold"
+                        onclick="execCmd('bold')"
+                    >
+                        B
+                    </button>
+                    <button
+                        class="style-btn fst-italic"
+                        title="Italic"
+                        onclick="execCmd('italic')"
+                    >
+                        I
+                    </button>
+                    <button
+                        class="style-btn text-decoration-underline"
+                        title="Underline"
+                        onclick="execCmd('underline')"
+                    >
+                        U
+                    </button>
+                    <button
+                        class="style-btn text-decoration-line-through"
+                        title="Strikethrough"
+                        onclick="execCmd('strikeThrough')"
+                    >
+                        ab
+                    </button>
+                    <button
+                        class="tool-btn"
+                        id="colorBtn"
+                        title="Text Color"
+                        onclick="document.getElementById('fontColorPicker').click()"
+                    >
+                        <i class="bi bi-palette"></i>
+                    </button>
+                    <input type="color" id="fontColorPicker" style="display: none" />
+                </div>
+                <div class="toolbar-group">
+                    <button
+                        class="tool-btn"
+                        title="Bullet list"
+                        onclick="execCmd('insertUnorderedList')"
+                    >
+                        <i class="bi bi-list-ul"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Numbered list"
+                        onclick="execCmd('insertOrderedList')"
+                    >
+                        <i class="bi bi-list-ol"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Align Left"
+                        onclick="execCmd('justifyLeft')"
+                    >
+                        <i class="bi bi-text-left"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Align Center"
+                        onclick="execCmd('justifyCenter')"
+                    >
+                        <i class="bi bi-text-center"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Align Right"
+                        onclick="execCmd('justifyRight')"
+                    >
+                        <i class="bi bi-text-right"></i>
+                    </button>
+                    <button
+                        class="tool-btn"
+                        title="Justify"
+                        onclick="execCmd('justifyFull')"
+                    >
+                        <i class="bi bi-justify"></i>
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
 
-      <div id="drawToolbar" class="toolbar hidden">
-        <div class="toolbar-group">
-          <button class="draw-btn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
-          <button class="draw-btn" title="Select"><i class="bi bi-cursor"></i></button>
-          <button class="draw-btn" title="Purple Pen"><i class="bi bi-pencil-fill" style="color:purple"></i></button>
-          <button class="draw-btn" title="Red Pen"><i class="bi bi-pencil-fill" style="color:red"></i></button>
-          <button class="draw-btn" title="Yellow Highlighter"><i class="bi bi-highlighter" style="color:yellow"></i></button>
-          <button class="draw-btn" title="Eraser"><i class="bi bi-eraser"></i></button>
+        <div id="insertToolbar" class="toolbar hidden">
+            <div class="toolbar-group">
+                <button class="tool-btn" onclick="alert('Table Inserted!')">
+                    <i class="bi bi-grid-3x3"></i> Table
+                </button>
+                <button class="tool-btn" onclick="alert('Image Inserted!')">
+                    <i class="bi bi-image"></i> Image
+                </button>
+                <button class="tool-btn" onclick="alert('File Attached!')">
+                    <i class="bi bi-file-earmark-text"></i> File
+                </button>
+                <button class="tool-btn" onclick="alert('Link Inserted!')">
+                    <i class="bi bi-link-45deg"></i> Link
+                </button>
+            </div>
         </div>
-      </div>
+
+        <div id="drawToolbar" class="toolbar hidden">
+            <div class="toolbar-group">
+                <button class="draw-btn" title="Undo"><i class="bi bi-arrow-counterclockwise"></i></button>
+                <button class="draw-btn" title="Select"><i class="bi bi-cursor"></i></button>
+                <button class="draw-btn" title="Purple Pen"><i class="bi bi-pencil-fill" style="color:purple"></i></button>
+                <button class="draw-btn" title="Red Pen"><i class="bi bi-pencil-fill" style="color:red"></i></button>
+                <button class="draw-btn" title="Yellow Highlighter"><i class="bi bi-highlighter" style="color:yellow"></i></button>
+                <button class="draw-btn" title="Eraser"><i class="bi bi-eraser"></i></button>
+            </div>
+        </div>
     </div>
 
     <div class="main-layout">
-      <div id="sidebar" class="sidebar">
-        <div class="px-3 mb-3 d-flex justify-content-between align-items-center">
-          <i
-            class="bi bi-list notebook-toggle"
-            onclick="toggleSidebar()"
-          ></i>
-          <i
-            class="bi bi-caret-down-fill notebook-toggle"
-            onclick="toggleNotebookDropdown()"
-          ></i>
+        <div id="sidebar" class="sidebar">
+            <div class="px-3 mb-3 d-flex justify-content-between align-items-center">
+                <i
+                    class="bi bi-list notebook-toggle"
+                    onclick="toggleSidebar()"
+                ></i>
+                <i
+                    class="bi bi-caret-down-fill notebook-toggle"
+                    onclick="toggleNotebookDropdown()"
+                ></i>
+            </div>
+            <div id="notebookContainer">
+                <div class="notebook-item mb-2" onclick="toggleNotebookDropdown()">
+                    <i class="bi bi-journal-bookmark-fill"></i
+                    ><span class="text-label">My Notebook</span>
+                    <i id="notebookArrow" class="bi bi-chevron-down ms-auto"></i>
+                </div>
+                <div id="sectionList" class="collapse show"></div>
+            </div>
+            <div class="new-section" onclick="addSection()">
+                <i class="bi bi-plus-circle"></i> <span class="text-label">New Section</span>
+            </div>
         </div>
-        <div id="notebookContainer">
-          <div class="notebook-item mb-2" onclick="toggleNotebookDropdown()">
-            <i class="bi bi-journal-bookmark-fill"></i
-            ><span class="text-label">My Notebook</span>
-            <i id="notebookArrow" class="bi bi-chevron-down ms-auto"></i>
-          </div>
-          <div id="sectionList" class="collapse show"></div>
-        </div>
-        <div class="new-section" onclick="addSection()">
-          <i class="bi bi-plus-circle"></i> <span class="text-label">New Section</span>
-        </div>
-      </div>
 
-      <div class="page-list" id="pageList">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <button
-            class="btn btn-sm"
-            style="border: 1px solid var(--subtle-color); color: var(--highlight-color)"
-            onclick="addPage()"
-          >
-            <i class="bi bi-pencil-square me-1"></i> Add Page
-          </button>
-          <i
-            class="bi bi-filter text-white-50 fs-5"
-            style="cursor: pointer"
-          ></i>
+        <div class="page-list" id="pageList">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <button
+                    class="btn btn-sm"
+                    style="border: 1px solid var(--subtle-color); color: var(--highlight-color)"
+                    onclick="addPage()"
+                >
+                    <i class="bi bi-pencil-square me-1"></i> Add Page
+                </button>
+                <i
+                    class="bi bi-filter text-white-50 fs-5"
+                    style="cursor: pointer"
+                ></i>
+            </div>
         </div>
-      </div>
 
-      <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <div class="text-muted" id="dateTimeDisplay"></div>
-          <div class="d-flex align-items-center">
-            <input
-              type="text"
-              class="search-bar me-2"
-              placeholder="Search Notebooks"
-            />
-            <i
-              class="bi bi-arrows-angle-expand text-white-50"
-              title="Expand View"
-            ></i>
-          </div>
+        <div class="main-content">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="text-muted" id="dateTimeDisplay"></div>
+                <div class="d-flex align-items-center">
+                    <input
+                        type="text"
+                        class="search-bar me-2"
+                        placeholder="Search Notebooks"
+                    />
+                    <i
+                        class="bi bi-arrows-angle-expand text-white-50"
+                        title="Expand View"
+                    ></i>
+                </div>
+            </div>
+            <div contenteditable="true" class="editor" id="editor">
+                Start typing your note here...
+            </div>
         </div>
-        <div contenteditable="true" class="editor" id="editor">
-          Start typing your note here...
-        </div>
-      </div>
     </div>
 
     <script>
-      const sectionColors = [
-        '#ff6f61',
-        '#6b5b95',
-        '#88b04b',
-        '#f7cac9',
-        '#92a8d1',
-      ];
-      let sectionCount = 1;
-      let sectionData = {};
-      let currentSectionId = null;
-      let currentPageIndex = null;
-      let timestampInserted = false;
-
-      // Add a new section
-      function addSection() {
-        const sectionId = `section-${Date.now()}`;
-        const color = sectionColors[sectionCount % sectionColors.length];
-        const sectionHtml = `
-          <div class="section-item" data-section-id="${sectionId}">
-            <div class="left" onclick="selectSection('${sectionId}', this)">
-              <div class="color-bar" style="background-color:${color}"></div>
-              <input class="edit-input" value="Quick Notes ${sectionCount}" />
-            </div>
-            <i class="bi bi-trash" title="Delete" onclick="deleteSection(this)"></i>
-          </div>`;
-        document
-          .getElementById('sectionList')
-          .insertAdjacentHTML('beforeend', sectionHtml);
-
-        sectionData[sectionId] = [
-          { title: 'Untitled Page', content: '', timestamp: '' },
+        const sectionColors = [
+            '#ff6f61',
+            '#6b5b95',
+            '#88b04b',
+            '#f7cac9',
+            '#92a8d1',
         ];
-        sectionCount++;
-        selectSection(
-          sectionId,
-          document.querySelector(`div[data-section-id="${sectionId}"] .left`)
-        );
-      }
+        let sectionCount = 1;
+        let sectionData = {};
+        let currentSectionId = null;
+        let currentPageIndex = null;
+        let timestampInserted = false;
 
-      // Select section and update UI
-      function selectSection(sectionId, el) {
-        currentSectionId = sectionId;
-        currentPageIndex = null;
-        timestampInserted = false;
-
-        document
-          .querySelectorAll('.section-item')
-          .forEach((si) => si.classList.remove('active'));
-        el.parentElement.classList.add('active');
-
-        renderPageList();
-        if (sectionData[sectionId]?.length > 0) {
-          loadPageFromData(0);
-        } else {
-          clearEditor();
+        // Helper function to get RGB values from hex for shadows
+        function hexToRgb(hex) {
+            const bigint = parseInt(hex.slice(1), 16);
+            const r = (bigint >> 16) & 255;
+            const g = (bigint >> 8) & 255;
+            const b = bigint & 255;
+            return `${r}, ${g}, ${b}`;
         }
-      }
+        document.documentElement.style.setProperty('--highlight-color-rgb', hexToRgb(getComputedStyle(document.documentElement).getPropertyValue('--highlight-color').trim()));
 
-      // Delete section
-      function deleteSection(icon) {
-        const sectionEl = icon.closest('.section-item');
-        const sid = sectionEl.getAttribute('data-section-id');
-        if (confirm('🗑️ Delete this section and all its pages?')) {
-          delete sectionData[sid];
-          sectionEl.remove();
-          clearEditor();
-          currentSectionId = null;
-          renderPageList();
+        // Add a new section
+        function addSection() {
+            const sectionId = `section-${Date.now()}`;
+            const color = sectionColors[sectionCount % sectionColors.length];
+            const sectionHtml = `
+                <div class="section-item" data-section-id="${sectionId}">
+                    <div class="left" onclick="selectSection('${sectionId}', this)">
+                        <div class="color-bar" style="background-color:${color}"></div>
+                        <span class="text-label">Quick Notes ${sectionCount}</span>
+                    </div>
+                    <i class="bi bi-trash" title="Delete" onclick="deleteSection(this)"></i>
+                </div>`;
+            document
+                .getElementById('sectionList')
+                .insertAdjacentHTML('beforeend', sectionHtml);
+
+            sectionData[sectionId] = [
+                { title: 'Untitled Page', content: '', timestamp: '' },
+            ];
+            sectionCount++;
+            selectSection(
+                sectionId,
+                document.querySelector(`div[data-section-id="${sectionId}"] .left`)
+            );
         }
-      }
 
-      // Render page list
-      function renderPageList() {
-        const pageList = document.getElementById('pageList');
-        const pages = sectionData[currentSectionId] || [];
+        // Select section and update UI
+        function selectSection(sectionId, el) {
+            currentSectionId = sectionId;
+            currentPageIndex = null;
+            timestampInserted = false;
 
-        pageList.innerHTML = `
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <button class="btn btn-sm" style="border:1px solid #6e5693; color:#c8a2ff;" onclick="addPage()">Add Page</button>
-          </div>`;
-        pages.forEach((p, idx) => {
-          const div = document.createElement('div');
-          div.className = 'page-item';
-          if (idx === currentPageIndex) div.classList.add('active');
-          div.innerHTML = `${p.title} <i class="bi bi-x-lg delete-btn" onclick="deletePage(event, ${idx})"></i>`;
-          div.onclick = () => loadPageFromData(idx);
-          pageList.appendChild(div);
+            document
+                .querySelectorAll('.section-item')
+                .forEach((si) => si.classList.remove('active'));
+            el.parentElement.classList.add('active');
+
+            renderPageList();
+            if (sectionData[sectionId]?.length > 0) {
+                loadPageFromData(0);
+            } else {
+                clearEditor();
+            }
+        }
+
+        // Delete section
+        function deleteSection(icon) {
+            const sectionEl = icon.closest('.section-item');
+            const sid = sectionEl.getAttribute('data-section-id');
+            if (confirm('🗑️ Delete this section and all its pages?')) {
+                delete sectionData[sid];
+                sectionEl.remove();
+                clearEditor();
+                currentSectionId = null;
+                renderPageList();
+            }
+        }
+
+        // Render page list
+        function renderPageList() {
+            const pageList = document.getElementById('pageList');
+            const pages = sectionData[currentSectionId] || [];
+
+            // Preserve the "Add Page" and "Filter" buttons
+            const headerHtml = `
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <button class="btn btn-sm" style="border:1px solid var(--subtle-color); color:var(--highlight-color);" onclick="addPage()">
+                        <i class="bi bi-pencil-square me-1"></i> Add Page
+                    </button>
+                    <i class="bi bi-filter text-white-50 fs-5" style="cursor: pointer;"></i>
+                </div>`;
+            pageList.innerHTML = headerHtml;
+
+            pages.forEach((p, idx) => {
+                const div = document.createElement('div');
+                div.className = 'page-item';
+                if (idx === currentPageIndex) div.classList.add('active');
+                div.innerHTML = `${p.title} <i class="bi bi-x-lg delete-btn" onclick="deletePage(event, ${idx})"></i>`;
+                div.onclick = () => loadPageFromData(idx);
+                pageList.appendChild(div);
+            });
+        }
+
+        // Add a new page
+        function addPage() {
+            if (!currentSectionId) return;
+            sectionData[currentSectionId].push({
+                title: 'Untitled Page',
+                content: '',
+                timestamp: '',
+            });
+            renderPageList();
+            loadPageFromData(sectionData[currentSectionId].length - 1);
+        }
+
+        // Delete a page
+        function deletePage(evt, index) {
+            evt.stopPropagation();
+            sectionData[currentSectionId]?.splice(index, 1);
+            renderPageList();
+            clearEditor();
+        }
+
+        // Load page into editor
+        function loadPageFromData(index) {
+            currentPageIndex = index;
+            timestampInserted = false;
+
+            const page = sectionData[currentSectionId][index];
+            document.getElementById('editor').innerHTML =
+                page.content || 'Start typing your note here…';
+            document.getElementById('dateTimeDisplay').innerText =
+                page.timestamp || (page.timestamp = getCurrentDateTime());
+            timestampInserted = !!page.timestamp;
+            renderPageList();
+        }
+
+        // Clear editor area
+        function clearEditor() {
+            document.getElementById('editor').innerHTML = '';
+            document.getElementById('dateTimeDisplay').innerText = '';
+        }
+
+        // Handle editor typing and update page metadata
+        document.getElementById('editor').addEventListener('input', function () {
+            if (currentSectionId === null || currentPageIndex === null) return;
+
+            const textLines = this.innerText.split('\n');
+            const title = textLines[0].trim() || 'Untitled Page';
+            const page = sectionData[currentSectionId][currentPageIndex];
+
+            page.title = title;
+            page.content = this.innerHTML;
+
+            if (!timestampInserted) {
+                timestampInserted = true;
+                page.timestamp = getCurrentDateTime();
+                document.getElementById('dateTimeDisplay').innerText = page.timestamp;
+            }
+
+            renderPageList();
         });
-      }
 
-      // Add a new page
-      function addPage() {
-        if (!currentSectionId) return;
-        sectionData[currentSectionId].push({
-          title: 'Untitled Page',
-          content: '',
-          timestamp: '',
+        // Get current date/time string
+        function getCurrentDateTime() {
+            return new Date().toLocaleString();
+        }
+
+        // Sidebar toggle functions
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('collapsed');
+        }
+
+        function toggleNotebookDropdown() {
+            const list = document.getElementById('sectionList');
+            const arrow = document.getElementById('notebookArrow');
+            list.classList.toggle('show');
+            arrow.classList.toggle('rotate');
+        }
+
+        // Main function to toggle toolbars
+        function toggleToolbar(toolbarId) {
+            const toolbars = ['file', 'home', 'insert', 'draw'];
+            const selectedToolbar = document.getElementById(`${toolbarId}Toolbar`);
+            const selectedButton = document.getElementById(`${toolbarId}Btn`);
+
+            if (toolbarId === 'file') {
+                selectedToolbar.classList.toggle('show');
+            } else {
+                selectedToolbar.classList.toggle('hidden');
+            }
+
+            // Toggle active state for all buttons based on which toolbar is open
+            toolbars.forEach((id) => {
+                const btn = document.getElementById(`${id}Btn`);
+                const toolbar = document.getElementById(`${id}Toolbar`);
+                if (
+                    (id !== 'file' && !toolbar.classList.contains('hidden')) ||
+                    (id === 'file' && toolbar.classList.contains('show'))
+                ) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // Text editing commands for the editor
+        function execCmd(command, value = null) {
+            document.execCommand(command, false, value);
+        }
+
+        // Event listeners to handle the toolbar state
+        document.addEventListener('DOMContentLoaded', () => {
+            addSection(); // Start with one section
+            
+            // Set up font color picker
+            document
+                .getElementById('fontColorPicker')
+                .addEventListener('input', (e) => {
+                    execCmd('foreColor', e.target.value);
+                });
+
+            // Handle section title editing
+            document.getElementById('sectionList').addEventListener('dblclick', function(e) {
+                const input = e.target.closest('.section-item .left input');
+                if (input) {
+                    input.focus();
+                }
+            });
+
+            document.getElementById('sectionList').addEventListener('blur', function(e) {
+                const input = e.target.closest('.section-item .left input');
+                if (input) {
+                    const sectionEl = input.closest('.section-item');
+                    const sectionId = sectionEl.getAttribute('data-section-id');
+                    if (sectionData[sectionId] && sectionData[sectionId].length > 0) {
+                        sectionData[sectionId][0].title = input.value;
+                    }
+                }
+            }, true); // Use capture to catch blur event
         });
-        renderPageList();
-        loadPageFromData(sectionData[currentSectionId].length - 1);
-      }
-
-      // Delete a page
-      function deletePage(evt, index) {
-        evt.stopPropagation();
-        sectionData[currentSectionId]?.splice(index, 1);
-        renderPageList();
-        clearEditor();
-      }
-
-      // Load page into editor
-      function loadPageFromData(index) {
-        currentPageIndex = index;
-        timestampInserted = false;
-
-        const page = sectionData[currentSectionId][index];
-        document.getElementById('editor').innerHTML =
-          page.content || 'Start typing your note here…';
-        document.getElementById('dateTimeDisplay').innerText =
-          page.timestamp || (page.timestamp = getCurrentDateTime());
-        timestampInserted = !!page.timestamp;
-        renderPageList();
-      }
-
-      // Clear editor area
-      function clearEditor() {
-        document.getElementById('editor').innerHTML = '';
-        document.getElementById('dateTimeDisplay').innerText = '';
-      }
-
-      // Handle editor typing and update page metadata
-      document.getElementById('editor').addEventListener('input', function () {
-        if (currentSectionId === null || currentPageIndex === null) return;
-
-        const textLines = this.innerText.split('\n');
-        const title = textLines[0].trim() || 'Untitled Page';
-        const page = sectionData[currentSectionId][currentPageIndex];
-
-        page.title = title;
-        page.content = this.innerHTML;
-
-        if (!timestampInserted) {
-          timestampInserted = true;
-          page.timestamp = getCurrentDateTime();
-          document.getElementById('dateTimeDisplay').innerText = page.timestamp;
-        }
-
-        renderPageList();
-      });
-
-      // Get current date/time string
-      function getCurrentDateTime() {
-        return new Date().toLocaleString();
-      }
-
-      // Sidebar toggle functions
-      function toggleSidebar() {
-        document.getElementById('sidebar').classList.toggle('collapsed');
-      }
-
-      function toggleNotebookDropdown() {
-        const list = document.getElementById('sectionList');
-        const arrow = document.getElementById('notebookArrow');
-        list.classList.toggle('show');
-        arrow.classList.toggle('rotate');
-      }
-
-      // Main function to toggle toolbars
-      function toggleToolbar(toolbarId) {
-        const toolbars = ['file', 'home', 'insert', 'draw'];
-        const selectedToolbar = document.getElementById(`${toolbarId}Toolbar`);
-        const selectedButton = document.getElementById(`${toolbarId}Btn`);
-
-        if (selectedToolbar.classList.contains('hidden')) {
-          // Hide all other toolbars and remove active class
-          toolbars.forEach((id) => {
-            document.getElementById(`${id}Toolbar`).classList.add('hidden');
-            document.getElementById(`${id}Btn`).classList.remove('active');
-          });
-          // Show the selected toolbar and add active class
-          selectedToolbar.classList.remove('hidden');
-          selectedButton.classList.add('active');
-        } else {
-          // If already visible, hide it
-          selectedToolbar.classList.add('hidden');
-          selectedButton.classList.remove('active');
-        }
-      }
-
-      // Text editing commands
-      function execCmd(command, value = null) {
-        document.execCommand(command, false, value);
-      }
-
-      // Event listeners for a better UX
-      document.addEventListener('DOMContentLoaded', () => {
-        addSection(); // Start with one section
-        toggleToolbar('home'); // Show the Home toolbar by default
-
-        document
-          .getElementById('fontColorPicker')
-          .addEventListener('input', (e) => {
-            execCmd('foreColor', e.target.value);
-          });
-      });
     </script>
-  </body>
+</body>
 </html>
