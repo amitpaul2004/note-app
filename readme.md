@@ -39,3 +39,5 @@ This is a OneNote-inspired web application UI built using HTML, CSS (Bootstrap),
    ```bash
    git clone https://github.com/amitpaul2004/note-app.git
 
+   ----
+
